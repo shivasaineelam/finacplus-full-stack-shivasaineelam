@@ -2,6 +2,8 @@ const express = require('express');
 require('./config/env');
 const cookieParser = require('cookie-parser'); 
 const userRoutes=require('./routes/userRegistration')
+const otherroutes=require('./routes/otherroutes')
+
 
 const connectDatabase = require('./config/db');
 
@@ -18,6 +20,7 @@ app.get('/', (req, res) => {
   res.send('hello world');
 });
 app.use("/api/v1/",userRoutes)
+app.use("/types",otherroutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
