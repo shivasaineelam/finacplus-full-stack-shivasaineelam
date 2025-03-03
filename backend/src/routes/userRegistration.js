@@ -1,5 +1,5 @@
   const express = require('express');
-  const User = require('../models/User');
+  const User = require('../models/user');
   const bcrypt = require('bcryptjs');
   const jwt = require('jsonwebtoken');
   const authMiddleware = require('../middleware/authmiddleware');
@@ -50,6 +50,7 @@
 
   router.get('/users', authMiddleware, async (req, res) => {
     try {
+      //check yesterdays tought
       const users = await User.find();
       res.status(200).json(users);
     } catch (error) {

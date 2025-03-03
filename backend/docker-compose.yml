@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: finacplus-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_INITDB_DATABASE=finacplusdb 
+    ports:
+      - "27017:27017"
+    volumes:
+      - finacplus_mongo_data:/data/db  
+    networks:
+      - finacplus-network
+
+  app:
+    build: .
+    container_name: finacplus-app 
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_CONNECTION_URL=mongodb://root:example@finacplus-mongodb:27017/finacplusdb?authSource=admin  
+    networks:
+      - finacplus-network
+
+networks:
+  finacplus-network:
+    driver: bridge
+
+volumes:
+  finacplus_mongo_data:

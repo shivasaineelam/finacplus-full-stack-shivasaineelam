@@ -1,9 +1,9 @@
 const express = require('express');
-require('./../config/env');
+require('./config/env');
 const cookieParser = require('cookie-parser'); 
-const userRoutes=require('./../routes/userRegistration')
+const userRoutes=require('./routes/userRegistration')
 
-const connectDatabase = require('../config/db');
+const connectDatabase = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
