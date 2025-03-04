@@ -3,11 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const genderSlice = createSlice({
   name: "genders",
   initialState: {
-    name: [],
+    types: [],
   },
   reducers: {
     addGenders: (state, action) => {
-      state.name = action.payload;
+      state.types = action.payload;
     },
   },
 });
