@@ -20,7 +20,7 @@ function App() {
     <div>
       <Header />
       <UserForm />
-      <GoogleOAuthProvider clientId="81372339458-a5qqdu626b3ih3pfmo5v6ct1njku5hht.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="clientId">
         <div>
           <GoogleAuth setIsModalOpen={setIsModalOpen} setUserId={setUserId} />
         </div>
