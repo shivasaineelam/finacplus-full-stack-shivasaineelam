@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { validateEmail, validatePasswordfunction } from './../helpers/validationHelpers'; 
 import registerUser from './../utlils/registerUser';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';  
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +12,7 @@ const RegistrationForm = () => {
     dateofbirth: '',
     password: '',
     about: '',
-    selectedGender: ''
+    gender: ''
   });
 
   const [emailValid, setEmailValid] = useState(null);
@@ -25,6 +26,7 @@ const RegistrationForm = () => {
   });
 
   const [showTooltip, setShowTooltip] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const genders = useSelector((state) => state.gender?.types);
 
   const calculateAge = (dob) => {
@@ -70,14 +72,15 @@ const RegistrationForm = () => {
   };
 
   const validatePassword = (password) => {
-    const{
+    const {
       lengthCheck,
       lowerCaseCheck,
       upperCaseCheck,
       numberCheck,
       symbolCheck,
       passwordValid
-    }=validatePasswordfunction(password);
+    } = validatePasswordfunction(password);
+
     setValidationFeedback({
       lengthValid: lengthCheck,
       lowercaseValid: lowerCaseCheck,
@@ -87,13 +90,14 @@ const RegistrationForm = () => {
     });
 
     setPasswordValid(passwordValid);
+    return passwordValid;
   };
 
   const handleGenderChange = (e) => {
     const gender = e.target.value;
     setFormData({
       ...formData,
-      selectedGender: gender,
+      gender: gender,
     });
   };
 
@@ -102,7 +106,6 @@ const RegistrationForm = () => {
 
     const emailIsValid = validateEmail(formData.email);
     const passwordValidation = validatePassword(formData.password);
-
     setEmailValid(emailIsValid);
     setPasswordValid(passwordValidation);
 
@@ -113,6 +116,10 @@ const RegistrationForm = () => {
         console.error("Error during registration:", error);
       }
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);  
   };
 
   return (
@@ -135,7 +142,7 @@ const RegistrationForm = () => {
       
       <div className="password-container">
         <input 
-          type="password" 
+          type={passwordVisible ? "text" : "password"}  
           name="password" 
           value={formData.password} 
           onChange={handleChange} 
@@ -143,6 +150,13 @@ const RegistrationForm = () => {
           required 
           minLength="10" 
         />
+        <span 
+          className="eye-icon" 
+          onClick={togglePasswordVisibility} 
+          style={{ cursor: 'pointer' }}
+        >
+          {passwordVisible ? <FaEyeSlash /> : <FaEye />}  
+        </span>
         <div className="password-requirements">
           <span className={validationFeedback.lengthValid ? "valid" : "invalid"}>
             Password must be at least 10 characters.
@@ -175,7 +189,7 @@ const RegistrationForm = () => {
 
       {showTooltip && <div className="tooltip">Maximum characters reached</div>}
 
-      <button type="submit" disabled={!passwordValid || !emailValid}>Register</button>
+      <button type="submit" >Register</button>
     </form>
   );
 };

@@ -1,22 +1,36 @@
 import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 
-const GoogleAuth = () => {
+const GoogleAuth = ({ setIsModalOpen, setUserId }) => {
   const responseGoogle = (response) => {
-    axios.post('http://localhost:5000/google-login', { token: response.credential }, { withCredentials: true })
-      .then((res) => {
-        alert('Logged in with Google!');
-      })
-      .catch((error) => {
-        alert('Error logging in with Google');
-      });
+    if (response.credential) {
+      const decodedData = decodeJwt(response.credential);
+
+      console.log(decodedData);
+
+      // Set user ID and open the modal
+      setUserId(decodedData.sub); // Assuming 'sub' is the user ID
+      setIsModalOpen(true); // Open the modal
+
+    } else {
+      console.log("Error: No credential received");
+    }
+  };
+
+  const decodeJwt = (token) => {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const decodedData = JSON.parse(window.atob(base64));
+    return decodedData;
   };
 
   return (
     <GoogleLogin
       onSuccess={responseGoogle}
-      onError={() => alert('Login Failed')}
+      onError={() => {
+        console.log("Login failed");
+        alert('Login Failed');
+      }}
     />
   );
 };

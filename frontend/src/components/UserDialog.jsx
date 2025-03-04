@@ -10,15 +10,15 @@ const UserDialog = ({ isOpen, onRequestClose, userId }) => {
     about: '',
   });
 
-  useEffect(() => {
-    if (userId) {
-      axios.get(`http://localhost:5000/user/${userId}`, { withCredentials: true })
-        .then((res) => {
-          setFormData(res.data);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [userId]);
+  // useEffect(() => {
+  //   if (userId) {
+  //     axios.get(`http://localhost:5000/user/${userId}`, { withCredentials: true })
+  //       .then((res) => {
+  //         setFormData(res.data);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+  // }, [userId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,14 +30,8 @@ const UserDialog = ({ isOpen, onRequestClose, userId }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.patch(`http://localhost:5000/update`, formData, { withCredentials: true })
-      .then(() => {
-        alert('User details updated successfully!');
-        onRequestClose();
-      })
-      .catch((err) => {
-        alert('Error updating user details');
-      });
+   
+    console.log("submit the data")
   };
 
   return (
