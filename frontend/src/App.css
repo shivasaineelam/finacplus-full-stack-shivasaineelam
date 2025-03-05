@@ -284,3 +284,16 @@ button:hover {
 .modal-content button:hover {
   background-color: #45a049;
 }
+.user-exist{
+    color: #e74c3c;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+  
+  
+}

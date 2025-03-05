@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 import PasswordComponent from './PasswordComponent';
 
-const RegistrationForm = () => {
+const RegistrationForm = ({toggleForm,isLogin,setISAccountExist,isAccountExist}) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,7 +17,6 @@ const RegistrationForm = () => {
   });
   const navigate = useNavigate();
 
-  const [isLogin, setIsLogin] = useState(false); 
 
   const [showTooltip, setShowTooltip] = useState(false);
   const [emailValid, setEmailValid] = useState(null);
@@ -114,7 +113,11 @@ const RegistrationForm = () => {
       navigate('/profile'); 
       return response;
     } catch (error) {
-      console.log(error);
+      let msg=error?.response?.data?.message;
+      if(msg==="User already exists"){
+        toggleForm();
+        setISAccountExist(true);
+      }
     }
   };
 
@@ -142,9 +145,7 @@ const RegistrationForm = () => {
     setPasswordVisible(!passwordVisible);  
   };
 
-  const toggleForm = () => {
-    setIsLogin(!isLogin); 
-  };
+  
 
   return (
     <div>
@@ -173,38 +174,6 @@ const RegistrationForm = () => {
             <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Age" required disabled />
             <input type="date" name="dateofbirth" value={formData.dateofbirth} onChange={handleChange} required />
             
-            {/* <div className="password-container">
-              <div className='password-box-1'>
-                <input 
-                  type={passwordVisible ? "text" : "password"}  
-                  name="password" 
-                  value={formData.password} 
-                  onChange={handleChange} 
-                  placeholder="Password" 
-                  required 
-                  minLength="10" 
-                />
-                <span 
-                  className="eye-icon" 
-                  onClick={togglePasswordVisibility} 
-                  style={{ cursor: 'pointer',color:'black' }}
-                >
-                {passwordVisible ? (
-          <ClosedEyeIcon  />
-        ) : (
-          <OpenEyeIcon />
-        )}
-                </span>
-              </div>
-
-              <div className="password">
-                <span className={validationFeedback.lengthValid ? "valid" : "invalid"}>Password must be at least 10 characters.</span>
-                <span className={validationFeedback.lowercaseValid ? "valid" : "invalid"}>Password must include at least one lowercase letter.</span>
-                <span className={validationFeedback.uppercaseValid ? "valid" : "invalid"}>Password must include at least one uppercase letter.</span>
-                <span className={validationFeedback.numberValid ? "valid" : "invalid"}>Password must include at least one number.</span>
-                <span className={validationFeedback.symbolValid ? "valid" : "invalid"}>Password must include at least one symbol (!@#$%^&*).</span>
-              </div>
-            </div> */}
             <PasswordComponent passwordVisible={passwordVisible} handleChange={handleChange} formData={formData} togglePasswordVisibility={togglePasswordVisibility} validationFeedback={validationFeedback}/>
             
             <select name="gender" value={formData.selectedGender} onChange={handleGenderChange} required>
@@ -222,6 +191,7 @@ const RegistrationForm = () => {
 
         {isLogin && (
           <>
+          {isAccountExist&& <div className='user-exist'>user already exists ,please login</div>}
             <input 
               type="email" 
               name="email" 

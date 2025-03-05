@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { calculateAgeFromYear, validatePasswordfunction } from '../helpers/validationHelpers';
 import PasswordComponent from './PasswordComponent';
 
-const UserDialog = ({ isOpen, onRequestClose }) => {
+const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setISAccountExist}) => {
   const [formData, setFormData] = useState({
     age: '',
     dateofbirth: '',
@@ -93,12 +93,18 @@ const UserDialog = ({ isOpen, onRequestClose }) => {
     };
 
     try {
+
       const url = `${import.meta.env.VITE_USER_REGISTRATION_BACKEND}/api/v1/register`;
       const response = await axios.post(url, fullFormData, { withCredentials: true });
       navigate('/profile'); 
       return response;
     } catch (error) {
-      console.log(error);
+      let msg=error?.response?.data?.message;
+      if(msg==="User already exists"){
+        onRequestClose();
+        toggleForm();
+        setISAccountExist(true);
+      }
     }
   };
 

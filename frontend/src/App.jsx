@@ -12,13 +12,18 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
-
+  const [isLogin, setIsLogin] = useState(false); 
+  const[isAccountExist,setISAccountExist]=useState(false);
+  
   useEffect(() => {
     const token = Cookies.get('token');
     if (token) {
       navigate('/profile');
     }
   }, [navigate]);
+  const toggleForm = () => {
+    setIsLogin(!isLogin); 
+  };
 
 
   useGenderDetails();
@@ -31,12 +36,14 @@ function App() {
           <GoogleOAuthProvider clientId="81372339458-a5qqdu626b3ih3pfmo5v6ct1njku5hht.apps.googleusercontent.com">
             <GoogleAuth setIsModalOpen={setIsModalOpen} setUserId={setUserId} />
           </GoogleOAuthProvider>
-          <UserForm />
+          <UserForm toggleForm={toggleForm} isLogin={isLogin} isAccountExist={isAccountExist} setISAccountExist={setISAccountExist}/>
 
           <UserDialog 
             isOpen={isModalOpen} 
             onRequestClose={() => setIsModalOpen(false)} 
             userId={userId} 
+            toggleForm={toggleForm}
+            setISAccountExist={setISAccountExist}
           />
         </div>
       </div>
