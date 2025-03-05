@@ -102,7 +102,11 @@ const RegistrationForm = ({toggleForm,isLogin,setISAccountExist,isAccountExist})
       navigate('/profile'); 
       return response;
     } catch (error) {
-      console.log(error);
+      let msg=error?.response?.data?.message;
+      if(msg==="User already exists"){
+        toggleForm();
+        setISAccountExist("user already exists ,please login")
+      }
     }
   };
 
@@ -191,7 +195,7 @@ const RegistrationForm = ({toggleForm,isLogin,setISAccountExist,isAccountExist})
 
         {isLogin && (
           <>
-          {isAccountExist&& <div className='user-exist'>user already exists ,please login</div>}
+          {isAccountExist&& <div className='user-exist'>{isAccountExist}</div>}
             <input 
               type="email" 
               name="email" 

@@ -103,7 +103,7 @@ const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setISAccountExist}) => 
       if(msg==="User already exists"){
         onRequestClose();
         toggleForm();
-        setISAccountExist(true);
+        setISAccountExist("user already exists ,please login");
       }
     }
   };

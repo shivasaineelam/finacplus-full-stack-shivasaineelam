@@ -18,14 +18,13 @@ router.post('/register', validationMiddleware, validate, async (req, res) => {
       return ResponseFormatter.operationSuccess(res, "", 'User already exists', 400);
     }
 
-    const hashedPassword = await bcrypt.hash(password.trim(), 10);
 
     const user = new User({
       name,
       email,
       age,
       dateofbirth,
-      password: hashedPassword,
+      password,
       gender,
       about,
     });
@@ -57,6 +56,7 @@ router.post('/login', loginValidationMiddleware, validateLogin, async (req, res)
     if (!user) {
       return ResponseFormatter.operationSuccess(res, "", 'User does not exist. Please register first.', 404);
     }
+    console.log(password);
 
     const isMatch = await bcrypt.compare(password.trim(), user.password);
     if (!isMatch) {

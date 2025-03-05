@@ -13,7 +13,7 @@ function App() {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false); 
-  const[isAccountExist,setISAccountExist]=useState(false);
+  const[isAccountExist,setISAccountExist]=useState("");
   
   useEffect(() => {
     const token = Cookies.get('token');
