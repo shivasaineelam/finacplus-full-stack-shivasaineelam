@@ -1,94 +1,134 @@
-  const express = require('express');
-  const User = require('../models/user');
-  const bcrypt = require('bcryptjs');
-  const jwt = require('jsonwebtoken');
-  const authMiddleware = require('../middleware/authmiddleware');
+const express = require('express');
+const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const authMiddleware = require('../middleware/authmiddleware');
+const ResponseFormatter = require('../responder/responseFormatter');
+const { validationMiddleware, validate } = require('../middleware/usermiddleware');
+const { loginValidationMiddleware, validateLogin } = require('../middleware/usermiddleware');
 
-  const router = express.Router();
+const router = express.Router();
 
-  router.post('/register', async (req, res) => {
-    const { name, email, age, dateofbirth, password, gender, about } = req.body;
+router.post('/register', validationMiddleware, validate, async (req, res) => {
+  const { name, email, age, dateofbirth, password, gender, about } = req.body;
 
+  try {
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return ResponseFormatter.operationFailed(res, "", 'User already exists', 400);
     }
+
+    const hashedPassword = await bcrypt.hash(password.trim(), 10);
 
     const user = new User({
       name,
       email,
       age,
       dateofbirth,
-      password,
+      password: hashedPassword,
       gender,
-      about
+      about,
     });
 
-    try {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(user.password, salt);
+    const userData = await user.save();
 
-      const userData = await user.save();
+    const token = jwt.sign({ id: userData._id }, 'shivasaineelam', { expiresIn: '2h' });
 
-      const token = jwt.sign({ id: userData._id }, 'shivasaineelam', { expiresIn: '2h' });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'Strict',
+      maxAge: 3600000 * 2,
+    });
 
-      res.cookie('token', token, {
-        httpOnly: true,  
-        secure: false, 
-        sameSite: 'Strict', 
-        maxAge: 3600000*2
-      });
+    return ResponseFormatter.operationSuccess(res, userData, 'User created successfully', 201);
 
-      res.status(201).json({
-        message: 'User created successfully',
-        user: userData
-      });
-    } catch (error) {
-      res.status(400).json({ message: 'Error creating user', error: error.message });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    return ResponseFormatter.operationFailed(res, error.message, 'Error creating user', 500);
+  }
+});
+
+router.post('/login', loginValidationMiddleware, validateLogin, async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return ResponseFormatter.operationFailed(res, "", 'User does not exist. Please register first.', 404);
     }
-  });
 
-  router.get('/users', authMiddleware, async (req, res) => {
-    try {
-      //check yesterdays tought
-      const users = await User.find();
-      res.status(200).json(users);
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching users', error: error.message });
+    const isMatch = await bcrypt.compare(password.trim(), user.password);
+    if (!isMatch) {
+      return ResponseFormatter.operationFailed(res, "", 'Invalid credentials. Please check your password.', 401);
     }
-  });
 
-  router.patch('/update', authMiddleware, async (req, res) => {
-      try {
-        const user = await User.findByIdAndUpdate(req.user.id, req.body, { new: true });
-        
-        if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json(user);
-      } catch (error) {
-        res.status(400).json({ message: 'Error updating user', error: error.message });
-      }
+    const token = jwt.sign({ id: user._id }, 'shivasaineelam', { expiresIn: '2h' });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'Strict',
+      maxAge: 3600000 * 2,
     });
-    
-  router.delete('/delete', authMiddleware, async (req, res) => {
-      try {
-        const user = await User.findByIdAndDelete(req.user.id);
-        
-        if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json({ message: 'User deleted successfully' });
-      } catch (error) {
-        res.status(400).json({ message: 'Error deleting user', error: error.message });
-      }
-    });
-    
 
-  router.post('/logout', (req, res) => {
+    return ResponseFormatter.operationSuccess(res, {
+      name: user.name,
+      email: user.email,
+      age: user.age,
+      gender: user.gender,
+      about: user.about,
+    }, 'Login successful', 200);
 
-    res.clearCookie('token', { httpOnly: true, secure: false });
-    res.status(200).json({ message: 'User logged out successfully' });
-  });
+  } catch (error) {
+    console.error('Error during login:', error);
+    return ResponseFormatter.operationFailed(res, error.message, 'Server error', 500);
+  }
+});
 
-  module.exports = router;
+router.get('/users', authMiddleware, async (req, res) => {
+  try {
+    const users = await User.find();
+    return ResponseFormatter.operationSuccess(res, users, 'Users fetched successfully', 200);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return ResponseFormatter.operationFailed(res, error.message, 'Error fetching users', 500);
+  }
+});
+
+router.patch('/update', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.user.id, req.body, { new: true });
+
+    if (!user) {
+      return ResponseFormatter.operationFailed(res, "", 'User not found', 404);
+    }
+
+    return ResponseFormatter.operationSuccess(res, user, 'User updated successfully', 200);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return ResponseFormatter.operationFailed(res, error.message, 'Error updating user', 500);
+  }
+});
+
+router.delete('/delete', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.user.id);
+
+    if (!user) {
+      return ResponseFormatter.operationFailed(res, "", 'User not found', 404);
+    }
+
+    return ResponseFormatter.operationSuccess(res, "", 'User deleted successfully', 200);
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return ResponseFormatter.operationFailed(res, error.message, 'Error deleting user', 500);
+  }
+});
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('token', { httpOnly: true, secure: false });
+  return ResponseFormatter.operationSuccess(res, "", 'User logged out successfully', 200);
+});
+
+module.exports = router;

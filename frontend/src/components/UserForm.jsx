@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { validateEmail, validatePasswordfunction } from './../helpers/validationHelpers'; 
-import registerUser from './../utlils/registerUser';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';  
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import OpenEyeIcon from '../assets/icons/OpenEye';
+import ClosedEyeIcon from '../assets/icons/ClosedEye';
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +19,6 @@ const RegistrationForm = () => {
   });
 
   const [emailValid, setEmailValid] = useState(null);
-  const [passwordValid, setPasswordValid] = useState(null);
   const [validationFeedback, setValidationFeedback] = useState({
     lengthValid: false,
     lowercaseValid: false,
@@ -27,7 +29,10 @@ const RegistrationForm = () => {
 
   const [showTooltip, setShowTooltip] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [isLogin, setIsLogin] = useState(false); 
+
   const genders = useSelector((state) => state.gender?.types);
+  const navigate = useNavigate();
 
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
@@ -89,7 +94,6 @@ const RegistrationForm = () => {
       symbolValid: symbolCheck,
     });
 
-    setPasswordValid(passwordValid);
     return passwordValid;
   };
 
@@ -101,19 +105,45 @@ const RegistrationForm = () => {
     });
   };
 
+  const loginUser = async (formData) => {
+    try {
+      const url = `${import.meta.env.VITE_USER_REGISTRATION_BACKEND}/api/v1/login`;
+      const response = await axios.post(url, formData, { withCredentials: true });
+
+      navigate('/profile'); 
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const registerUser = async (formData) => {
+    try {
+      const url = `${import.meta.env.VITE_USER_REGISTRATION_BACKEND}/api/v1/register`;
+      const response = await axios.post(url, formData, { withCredentials: true });
+      navigate('/profile'); 
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const emailIsValid = validateEmail(formData.email);
     const passwordValidation = validatePassword(formData.password);
     setEmailValid(emailIsValid);
-    setPasswordValid(passwordValidation);
 
-    if (emailIsValid && passwordValidation) {
+    if (emailIsValid && passwordValidation || isLogin) {
       try {
-        await registerUser(formData);
+        if (isLogin) {
+          await loginUser(formData);
+        } else {
+          await registerUser(formData);
+        }
       } catch (error) {
-        console.error("Error during registration:", error);
+        console.error("Error during registration/login:", error);
       }
     }
   };
@@ -122,75 +152,109 @@ const RegistrationForm = () => {
     setPasswordVisible(!passwordVisible);  
   };
 
+  const toggleForm = () => {
+    setIsLogin(!isLogin); 
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
-      <input 
-        type="email" 
-        name="email" 
-        value={formData.email} 
-        onChange={handleChange} 
-        placeholder="Email" 
-        required 
-      />
-      {emailValid === false && (
-        <span className="invalid">Invalid Email</span>
-      )}
+    <div>
+      <form onSubmit={handleSubmit}>
+      <div >
+        <button onClick={toggleForm} className="toggle-form">
+          {isLogin ? "New here? Create an account" : "Already a member? Sign in"}
+        </button>
+       </div>
 
-      <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Age" required disabled />
-      <input type="date" name="dateofbirth" value={formData.dateofbirth} onChange={handleChange} required />
-      
-      <div className="password-container">
-        <input 
-          type={passwordVisible ? "text" : "password"}  
-          name="password" 
-          value={formData.password} 
-          onChange={handleChange} 
-          placeholder="Password" 
-          required 
-          minLength="10" 
-        />
-        <span 
-          className="eye-icon" 
-          onClick={togglePasswordVisibility} 
-          style={{ cursor: 'pointer' }}
-        >
-          {passwordVisible ? <FaEyeSlash /> : <FaEye />}  
-        </span>
-        <div className="password-requirements">
-          <span className={validationFeedback.lengthValid ? "valid" : "invalid"}>
-            Password must be at least 10 characters.
-          </span>
-          <span className={validationFeedback.lowercaseValid ? "valid" : "invalid"}>
-            Password must include at least one lowercase letter.
-          </span>
-          <span className={validationFeedback.uppercaseValid ? "valid" : "invalid"}>
-            Password must include at least one uppercase letter.
-          </span>
-          <span className={validationFeedback.numberValid ? "valid" : "invalid"}>
-            Password must include at least one number.
-          </span>
-          <span className={validationFeedback.symbolValid ? "valid" : "invalid"}>
-            Password must include at least one symbol (!@#$%^&*).
-          </span>
-        </div>
-      </div>
-      
-      <select name="gender" value={formData.selectedGender} onChange={handleGenderChange} required>
-        <option value="">Select Gender</option>
-        {genders && genders?.map((gender, index) => (
-          <option key={index} value={gender}>
-            {gender}
-          </option>
-        ))}
-      </select>
+        {!isLogin && (
+          <>
+            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
+            <input 
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              placeholder="Email" 
+              required 
+            />
+            {emailValid === false && (
+              <span className="invalid">Invalid Email</span>
+            )}
 
-      <textarea name="about" value={formData.about} onChange={handleChange} placeholder="About" maxLength="5000"></textarea>
+            <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Age" required disabled />
+            <input type="date" name="dateofbirth" value={formData.dateofbirth} onChange={handleChange} required />
+            
+            <div className="password-container">
+              <div className='password-box-1'>
+                <input 
+                  type={passwordVisible ? "text" : "password"}  
+                  name="password" 
+                  value={formData.password} 
+                  onChange={handleChange} 
+                  placeholder="Password" 
+                  required 
+                  minLength="10" 
+                />
+                <span 
+                  className="eye-icon" 
+                  onClick={togglePasswordVisibility} 
+                  style={{ cursor: 'pointer',color:'black' }}
+                >
+                {passwordVisible ? (
+          <ClosedEyeIcon  />
+        ) : (
+          <OpenEyeIcon />
+        )}
+                </span>
+              </div>
 
-      {showTooltip && <div className="tooltip">Maximum characters reached</div>}
+              <div className="password">
+                <span className={validationFeedback.lengthValid ? "valid" : "invalid"}>Password must be at least 10 characters.</span>
+                <span className={validationFeedback.lowercaseValid ? "valid" : "invalid"}>Password must include at least one lowercase letter.</span>
+                <span className={validationFeedback.uppercaseValid ? "valid" : "invalid"}>Password must include at least one uppercase letter.</span>
+                <span className={validationFeedback.numberValid ? "valid" : "invalid"}>Password must include at least one number.</span>
+                <span className={validationFeedback.symbolValid ? "valid" : "invalid"}>Password must include at least one symbol (!@#$%^&*).</span>
+              </div>
+            </div>
+            
+            <select name="gender" value={formData.selectedGender} onChange={handleGenderChange} required>
+              <option value="">Select Gender</option>
+              {genders && genders?.map((gender, index) => (
+                <option key={index} value={gender}>{gender}</option>
+              ))}
+            </select>
 
-      <button type="submit" >Register</button>
-    </form>
+            <textarea name="about" value={formData.about} onChange={handleChange} placeholder="About" maxLength="5000"></textarea>
+
+            {showTooltip && <div className="tooltip">Maximum characters reached</div>}
+          </>
+        )}
+
+        {isLogin && (
+          <>
+            <input 
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              placeholder="Email" 
+              required 
+            />
+            <input 
+              type={passwordVisible ? "text" : "password"}  
+              name="password" 
+              value={formData.password} 
+              onChange={handleChange} 
+              placeholder="Password" 
+              required 
+            />
+          </>
+        )}
+        
+        <button className="toggle-form" type="submit">{isLogin ? 'Login' : 'Register'}</button>
+      </form>
+
+    
+    </div>
   );
 };
 

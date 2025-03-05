@@ -1,17 +1,20 @@
 import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../utlils/useSlice.js';
 
-const GoogleAuth = ({ setIsModalOpen, setUserId }) => {
+const GoogleAuth = ({ setIsModalOpen }) => {
+  const dispatch = useDispatch();
+
   const responseGoogle = (response) => {
     if (response.credential) {
       const decodedData = decodeJwt(response.credential);
-
-      console.log(decodedData);
-
-      // Set user ID and open the modal
-      setUserId(decodedData.sub); // Assuming 'sub' is the user ID
-      setIsModalOpen(true); // Open the modal
-
+      const userData = {
+        name: decodedData.name,
+        email: decodedData.email
+      };
+      dispatch(setUser(userData));
+      setIsModalOpen(true);
     } else {
       console.log("Error: No credential received");
     }
@@ -25,11 +28,13 @@ const GoogleAuth = ({ setIsModalOpen, setUserId }) => {
   };
 
   return (
-    <GoogleLogin
+    <GoogleLogin 
+      useOneTap
+      theme="filled_blue"
       onSuccess={responseGoogle}
       onError={() => {
         console.log("Login failed");
-        alert('Login Failed');
+        alert('unable to login at this moment');
       }}
     />
   );
