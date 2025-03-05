@@ -19,4 +19,17 @@ export const validateEmail = (email) => {
       passwordValid: lengthCheck && lowerCaseCheck && upperCaseCheck && numberCheck && symbolCheck,
     };
   };
+
+  export const calculateAgeFromYear = (dob) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth();
+    const day = today.getDate();
+
+    if (month < birthDate.getMonth() || (month === birthDate.getMonth() && day < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
   

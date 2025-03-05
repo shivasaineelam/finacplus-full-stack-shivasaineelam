@@ -35,7 +35,7 @@ router.post('/register', validationMiddleware, validate, async (req, res) => {
     const token = jwt.sign({ id: userData._id }, 'shivasaineelam', { expiresIn: '2h' });
 
     res.cookie('token', token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: 'Strict',
       maxAge: 3600000 * 2,
@@ -66,7 +66,7 @@ router.post('/login', loginValidationMiddleware, validateLogin, async (req, res)
     const token = jwt.sign({ id: user._id }, 'shivasaineelam', { expiresIn: '2h' });
 
     res.cookie('token', token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: 'Strict',
       maxAge: 3600000 * 2,

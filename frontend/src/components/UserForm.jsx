@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { validateEmail, validatePasswordfunction } from './../helpers/validationHelpers'; 
+import { validateEmail, validatePasswordfunction ,calculateAgeFromYear} from './../helpers/validationHelpers'; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import OpenEyeIcon from '../assets/icons/OpenEye';
-import ClosedEyeIcon from '../assets/icons/ClosedEye';
+import PasswordComponent from './PasswordComponent';
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -17,8 +15,13 @@ const RegistrationForm = () => {
     about: '',
     gender: ''
   });
+  const navigate = useNavigate();
 
+  const [isLogin, setIsLogin] = useState(false); 
+
+  const [showTooltip, setShowTooltip] = useState(false);
   const [emailValid, setEmailValid] = useState(null);
+
   const [validationFeedback, setValidationFeedback] = useState({
     lengthValid: false,
     lowercaseValid: false,
@@ -27,25 +30,12 @@ const RegistrationForm = () => {
     symbolValid: false,
   });
 
-  const [showTooltip, setShowTooltip] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [isLogin, setIsLogin] = useState(false); 
 
   const genders = useSelector((state) => state.gender?.types);
-  const navigate = useNavigate();
 
-  const calculateAge = (dob) => {
-    const birthDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const month = today.getMonth();
-    const day = today.getDate();
+  const calculateAge =(dob)=>calculateAgeFromYear(dob);
 
-    if (month < birthDate.getMonth() || (month === birthDate.getMonth() && day < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -183,7 +173,7 @@ const RegistrationForm = () => {
             <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Age" required disabled />
             <input type="date" name="dateofbirth" value={formData.dateofbirth} onChange={handleChange} required />
             
-            <div className="password-container">
+            {/* <div className="password-container">
               <div className='password-box-1'>
                 <input 
                   type={passwordVisible ? "text" : "password"}  
@@ -214,7 +204,8 @@ const RegistrationForm = () => {
                 <span className={validationFeedback.numberValid ? "valid" : "invalid"}>Password must include at least one number.</span>
                 <span className={validationFeedback.symbolValid ? "valid" : "invalid"}>Password must include at least one symbol (!@#$%^&*).</span>
               </div>
-            </div>
+            </div> */}
+            <PasswordComponent passwordVisible={passwordVisible} handleChange={handleChange} formData={formData} togglePasswordVisibility={togglePasswordVisibility} validationFeedback={validationFeedback}/>
             
             <select name="gender" value={formData.selectedGender} onChange={handleGenderChange} required>
               <option value="">Select Gender</option>

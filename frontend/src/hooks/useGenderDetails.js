@@ -13,7 +13,7 @@ const useGenderDetails = () => {
         throw new Error("Network response was not ok");
       }
       const json = await response.json();
-      dispatch(addGenders(json.genders));
+      dispatch(addGenders(json.data));
     } catch (error) {
       console.error("Fetch error:", error);
     }

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
 import Header from './components/Header';
 import useGenderDetails from './hooks/useGenderDetails';
 import UserForm from './components/UserForm';
