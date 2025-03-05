@@ -14,7 +14,7 @@ const validateLogin = (req, res, next) => {
       message: 'Validation failed for login',
       data: errors.array(),
     };
-    return ResponseFormatter.operationFailed(res, error, 'login', 'email/password');
+    return ResponseFormatter.operationFailed(res, error.data, error.message,400);
   }
   next();
 };
@@ -35,7 +35,7 @@ const validate = (req, res, next) => {
       message: 'Validation failed for registration',
       data: errors.array(),
     };
-    return ResponseFormatter.operationFailed(res, error, 400);
+    return ResponseFormatter.operationFailed(res, error.data, error.message,400);
   }
   next();
 };

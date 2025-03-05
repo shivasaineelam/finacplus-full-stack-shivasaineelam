@@ -15,7 +15,7 @@ router.post('/register', validationMiddleware, validate, async (req, res) => {
   try {
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return ResponseFormatter.operationFailed(res, "", 'User already exists', 400);
+      return ResponseFormatter.operationSuccess(res, "", 'User already exists', 400);
     }
 
     const hashedPassword = await bcrypt.hash(password.trim(), 10);
@@ -55,12 +55,12 @@ router.post('/login', loginValidationMiddleware, validateLogin, async (req, res)
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return ResponseFormatter.operationFailed(res, "", 'User does not exist. Please register first.', 404);
+      return ResponseFormatter.operationSuccess(res, "", 'User does not exist. Please register first.', 404);
     }
 
     const isMatch = await bcrypt.compare(password.trim(), user.password);
     if (!isMatch) {
-      return ResponseFormatter.operationFailed(res, "", 'Invalid credentials. Please check your password.', 401);
+      return ResponseFormatter.operationSuccess(res, "", 'Invalid credentials. Please check your password.', 401);
     }
 
     const token = jwt.sign({ id: user._id }, 'shivasaineelam', { expiresIn: '2h' });

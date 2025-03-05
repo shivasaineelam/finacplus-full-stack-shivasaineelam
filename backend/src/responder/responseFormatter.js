@@ -2,7 +2,7 @@ const Responder = require( './responder' )
 
 const ResponseFormatter = () => {}
 
-ResponseFormatter.operationSuccess = ( res, data, message = '', statusCode = 200 ) => {
+ResponseFormatter.operationSuccess = ( res, data, message = '', statusCode  ) => {
   const successResponse = {
     statusCode,
     data,
@@ -13,17 +13,12 @@ ResponseFormatter.operationSuccess = ( res, data, message = '', statusCode = 200
 
 
 
-ResponseFormatter.operationFailed = ( res, error, type, path ) => {
-  if ( type && path ) {
-    error.data = {
-      type,
-      path,
-    }
-  }
+ResponseFormatter.operationFailed = ( res, error, message, statusCode ) => {
+
   const failedResponse = {
-    statusCode: error?.status,
-    message: error?.message,
-    error: error?.data,
+    statusCode: statusCode,
+    message: message,
+    error: error,
   }
   return Responder.fail( failedResponse, res )
 }
