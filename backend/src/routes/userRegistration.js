@@ -35,7 +35,7 @@ router.post('/register', validationMiddleware, validate, async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: false,
-      secure: false,
+      secure: process.env.environment === 'production',  
       sameSite: 'Strict',
       maxAge: 3600000 * 2,
     });
@@ -67,7 +67,7 @@ router.post('/login', loginValidationMiddleware, validateLogin, async (req, res)
 
     res.cookie('token', token, {
       httpOnly: false,
-      secure: false,
+      secure: process.env.environment === 'production',
       sameSite: 'Strict',
       maxAge: 3600000 * 2,
     });
