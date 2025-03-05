@@ -24,7 +24,9 @@ const validationMiddleware = [
   body('email').isEmail().withMessage('Valid email is required'),
   body('password').isLength({ min: 6 }).withMessage('Password should be at least 6 characters'),
   body('dateofbirth').isDate().withMessage('Valid date of birth is required'),
+  body('age').isNumeric().withMessage('Age must be a number').notEmpty().withMessage('Age is required'),
 ];
+
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
