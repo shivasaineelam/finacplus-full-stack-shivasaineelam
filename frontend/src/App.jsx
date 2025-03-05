@@ -33,7 +33,7 @@ function App() {
       <div className="background-image">
         <Header />
         <div className="content">
-          <GoogleOAuthProvider clientId="81372339458-a5qqdu626b3ih3pfmo5v6ct1njku5hht.apps.googleusercontent.com">
+          <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
             <GoogleAuth setIsModalOpen={setIsModalOpen} setUserId={setUserId} />
           </GoogleOAuthProvider>
           <UserForm toggleForm={toggleForm} isLogin={isLogin} isAccountExist={isAccountExist} setISAccountExist={setISAccountExist}/>

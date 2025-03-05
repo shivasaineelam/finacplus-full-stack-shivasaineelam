@@ -31,7 +31,7 @@ router.post('/register', validationMiddleware, validate, async (req, res) => {
 
     const userData = await user.save();
 
-    const token = jwt.sign({ id: userData._id }, 'shivasaineelam', { expiresIn: '2h' });
+    const token = jwt.sign({ id: userData._id }, 'finacplusbackend', { expiresIn: '2h' });
 
     res.cookie('token', token, {
       httpOnly: false,
@@ -63,7 +63,7 @@ router.post('/login', loginValidationMiddleware, validateLogin, async (req, res)
       return ResponseFormatter.operationSuccess(res, "", 'Invalid credentials. Please check your password.', 401);
     }
 
-    const token = jwt.sign({ id: user._id }, 'shivasaineelam', { expiresIn: '2h' });
+    const token = jwt.sign({ id: user._id }, 'finacplusbackend', { expiresIn: '2h' });
 
     res.cookie('token', token, {
       httpOnly: false,

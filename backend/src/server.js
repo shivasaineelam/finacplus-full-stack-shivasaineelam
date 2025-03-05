@@ -12,8 +12,8 @@ const PORT = process.env.PORT || 5000;
 
 connectDatabase();
 const corsOptions = {
-  origin: 'http://localhost:5173', // Allow only this specific origin
-  credentials: true,               // Allow credentials (cookies, HTTP authentication)
+  origin: process.env.FRONTEND_URL, 
+  credentials: true,              
 };
 
 app.use(cors(corsOptions));
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
-  res.send('hello world');
+  res.send('server working fine');
 });
 
 app.use("/api/v1/", userRoutes);
