@@ -96,6 +96,18 @@ router.get('/users', authMiddleware, async (req, res) => {
   }
 });
 
+router.get('/user', authMiddleware, async (req, res) => {
+  try {
+    console.log(req.user.id);
+    const users = await User.findById(req.user.id);
+    console.log(users);
+    return ResponseFormatter.operationSuccess(res, users, 'User fetched successfully', 200);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return ResponseFormatter.operationFailed(res, error.message, 'Error fetching users', 500);
+  }
+});
+
 router.patch('/update', authMiddleware, async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.user.id, req.body, { new: true });
