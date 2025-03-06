@@ -139,7 +139,7 @@ router.delete('/delete', authMiddleware, async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  res.clearCookie('token', { httpOnly: false, secure: false });
+  res.clearCookie('token', { httpOnly: false, secure: process.env.environment === 'production' });
   return ResponseFormatter.operationSuccess(res, "", 'User logged out successfully', 200);
 });
 

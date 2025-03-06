@@ -1,7 +1,8 @@
-const OpenEyeIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="24" height="24">
-      <path d="M12 4.5C7.1 4.5 3.1 7.1 1.5 11C2.9 14.9 6.5 18 12 18C17.9 18 21.9 15.9 23.5 12C22.1 8.1 18.5 4.5 12 4.5ZM12 14C9.79 14 7.72 12.89 7.07 10.91L9.47 8.56C10.11 9.75 11.02 10.5 12 10.5C13.1 10.5 13.97 9.73 14.47 8.56L16.93 10.91C16.28 12.89 14.21 14 12 14ZM12 6.5C9.79 6.5 7.72 7.61 7.07 9.09L9.47 7.44C10.11 6.25 11.02 5.5 12 5.5C13.1 5.5 13.97 6.27 14.47 7.44L16.93 5.09C16.28 3.11 14.21 2 12 2C9.79 2 7.72 3.11 7.07 5.09L9.47 7.44C10.11 6.25 11.02 5.5 12 5.5C13.1 5.5 13.97 6.27 14.47 7.44L16.93 5.09C16.28 3.11 14.21 2 12 2" fill="black"/>
-    </svg>
+const OpenEyeIcon = ({width="24",height="24"}) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <path d="M1 12s3-8 11-8 11 8 11 8-3 8-11 8-11-8-11-8z"></path>
+  <circle cx="12" cy="12" r="3"></circle>
+</svg>
   );
   
   

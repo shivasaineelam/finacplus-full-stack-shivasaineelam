@@ -20,10 +20,10 @@ const PasswordComponent = ({passwordVisible,handleChange,formData,togglePassword
                   style={{ cursor: 'pointer',color:'black' }}
                 >
                 {passwordVisible ? (
-          <ClosedEyeIcon  />
-        ) : (
-          <OpenEyeIcon />
-        )}
+                  <ClosedEyeIcon  width="24" height="24"/>
+                ) : (
+                  <OpenEyeIcon width="24" height="24" />
+                )}
                 </span>
               </div>
 

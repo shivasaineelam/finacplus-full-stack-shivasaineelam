@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { calculateAgeFromYear, validatePasswordfunction } from '../helpers/validationHelpers';
 import PasswordComponent from './PasswordComponent';
+import { loginUserApi } from '../helpers/api_helpers';
 
-const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setISAccountExist}) => {
+const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setmessageText}) => {
   const [formData, setFormData] = useState({
     age: '',
     dateofbirth: '',
@@ -94,8 +94,7 @@ const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setISAccountExist}) => 
 
     try {
 
-      const url = `${import.meta.env.VITE_USER_REGISTRATION_BACKEND}/api/v1/register`;
-      const response = await axios.post(url, fullFormData, { withCredentials: true });
+      const response=await loginUserApi(fullFormData);
       navigate('/profile'); 
       return response;
     } catch (error) {
@@ -103,7 +102,7 @@ const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setISAccountExist}) => 
       if(msg==="User already exists"){
         onRequestClose();
         toggleForm();
-        setISAccountExist("user already exists ,please login");
+        setmessageText("user already exists ,please login");
       }
     }
   };

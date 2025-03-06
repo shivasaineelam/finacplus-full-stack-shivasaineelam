@@ -9,14 +9,15 @@ const connectDatabase = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+console.log(process.env.FRONTEND_URL)
 connectDatabase();
 const corsOptions = {
-  origin: process.env.FRONTEND_URL, 
+  origin: 'http://localhost:5173', 
   credentials: true,              
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));  
 
 app.use(express.json());
 app.use(cookieParser());

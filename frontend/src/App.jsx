@@ -10,10 +10,9 @@ import { useNavigate } from 'react-router-dom';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false); 
-  const[isAccountExist,setISAccountExist]=useState("");
+  const[messageText,setmessageText]=useState("");
   
   useEffect(() => {
     const token = Cookies.get('token');
@@ -34,16 +33,15 @@ function App() {
         <Header />
         <div className="content">
           <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-            <GoogleAuth setIsModalOpen={setIsModalOpen} setUserId={setUserId} />
+            <GoogleAuth setIsModalOpen={setIsModalOpen}  />
           </GoogleOAuthProvider>
-          <UserForm toggleForm={toggleForm} isLogin={isLogin} isAccountExist={isAccountExist} setISAccountExist={setISAccountExist}/>
+          <UserForm toggleForm={toggleForm} isLogin={isLogin} messageText={messageText} setmessageText={setmessageText}/>
 
           <UserDialog 
             isOpen={isModalOpen} 
             onRequestClose={() => setIsModalOpen(false)} 
-            userId={userId} 
             toggleForm={toggleForm}
-            setISAccountExist={setISAccountExist}
+            setmessageText={setmessageText}
           />
         </div>
       </div>

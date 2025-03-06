@@ -2,6 +2,7 @@ import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../utlils/useSlice.js';
+import { decodeJwt } from '../helpers/helperFunctions.js';
 
 const GoogleAuth = ({ setIsModalOpen }) => {
   const dispatch = useDispatch();
@@ -18,13 +19,6 @@ const GoogleAuth = ({ setIsModalOpen }) => {
     } else {
       console.log("Error: No credential received");
     }
-  };
-
-  const decodeJwt = (token) => {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const decodedData = JSON.parse(window.atob(base64));
-    return decodedData;
   };
 
   return (

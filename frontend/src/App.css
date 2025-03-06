@@ -183,24 +183,237 @@ button:hover {
     font-size: 16px;
   }
 }
-
 .profile-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f0f2f5;
+  background-color: #f4f6f8;
 }
 
 .profile-card {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-10px);
+}
+
+.welcome-text {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.user-info {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.edit-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+.edit-form input,
+.edit-form textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.edit-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button + button {
+  background-color: #f44336;
+}
+
+button + button:hover {
+  background-color: #e53935;
+}
+
+.logout-btn {
+  background-color: #2196F3;
+}
+
+.logout-btn:hover {
+  background-color: #1976D2;
+}
+
+.delete-btn {
+  background-color: #f44336;
+}
+
+.delete-btn:hover {
+  background-color: #e53935;
+}
+
+/* Modal Styling */
+.confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
   background-color: white;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 500px;
   text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px;
+}
+
+.delete-confirm {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-confirm:hover {
+  background-color: #e53935;
+}
+
+.cancel {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.cancel:hover {
+  background-color: #45a049;
+}
+
+
+.profile-card:hover {
+  transform: translateY(-10px);
+}
+
+.welcome-text {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.user-info {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.edit-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+.edit-form input,
+.edit-form textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.edit-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button + button {
+  background-color: #f44336;
+}
+
+button + button:hover {
+  background-color: #e53935;
+}
+
 
 .welcome-text {
   font-size: 24px;
@@ -224,12 +437,12 @@ button:hover {
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  color: #666;
+  color: #d6c8c8;
   height: 100vh;
   background-color: #f0f2f5;
 }
 
-.modal-container {
+.modal-container-1 {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -239,7 +452,7 @@ button:hover {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-content {
+.modal-content-1 {
   background-color: white;
   width: 50%;
   height: 70%;
@@ -252,25 +465,25 @@ button:hover {
   justify-content: space-between;
 }
 
-.modal-content h2 {
+.modal-content-1 h2 {
   text-align: center;
   font-size: 24px;
 }
 
-.modal-content form {
+.modal-content-1 form {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.modal-content input, .modal-content select, .modal-content textarea {
+.modal-content-1 input, .modal-content select, .modal-content-1 textarea {
   padding: 2px;
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
 
-.modal-content button {
+.modal-content-1 button {
   padding: 4px;
   font-size: 16px;
   background-color: #4CAF50;
@@ -281,7 +494,7 @@ button:hover {
   margin-top: 10px;
 }
 
-.modal-content button:hover {
+.modal-content-1 button:hover {
   background-color: #45a049;
 }
 .user-exist{
