@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { calculateAgeFromYear, validatePasswordfunction } from '../helpers/validationHelpers';
 import PasswordComponent from './PasswordComponent';
-import { loginUserApi } from '../helpers/api_helpers';
+import {  registerUserApi } from '../helpers/api_helpers';
 
 const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setmessageText}) => {
   const [formData, setFormData] = useState({
@@ -14,7 +14,7 @@ const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setmessageText}) => {
     about: '',
     gender: ''
   });
-
+  const[modalmessage,setmodalmessage]=useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [validationFeedback, setValidationFeedback] = useState({
     lengthValid: false,
@@ -41,6 +41,21 @@ const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setmessageText}) => {
         age: age, 
       });
     } else {
+      if (name === "age") {
+        if (value !== "" && isNaN(value) || Number(value) < 0 || Number(value) > 100) {
+          setmodalmessage('Please enter a valid age (between 0 and 100).');
+        } else {
+          setmodalmessage("");
+        }
+      } else if (name === "about") {
+        if (value.length > 5000) {
+          console.log("dslfsj")
+          setmodalmessage('Maximum character limit reached (5000 characters)');
+          return ;
+        } else {
+          setmodalmessage("");
+        }
+      }
       setFormData({
         ...formData,
         [name]: value,
@@ -94,7 +109,7 @@ const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setmessageText}) => {
 
     try {
 
-      const response=await loginUserApi(fullFormData);
+      const response=await registerUserApi(fullFormData);
       navigate('/profile'); 
       return response;
     } catch (error) {
@@ -108,18 +123,20 @@ const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setmessageText}) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onRequestClose} className="modal-container">
+    <Modal isOpen={isOpen} onRequestClose={onRequestClose} className="modal-container-1">
       <div className="modal-content">
-        <h2>Complete Your Profile</h2>
+        <h2>Please Complete Your Profile</h2>
         <form onSubmit={handleSubmit}>
+        {
+          modalmessage&&<div className='warning-text'>{modalmessage}</div>
+        }
           <input 
-            type="number" 
+            type="text" 
             name="age" 
             value={formData.age} 
             onChange={handleChange} 
             placeholder="Age" 
             required 
-            disabled 
           />
           <input 
             type="date" 
@@ -154,10 +171,10 @@ const UserDialog = ({ isOpen, onRequestClose ,toggleForm,setmessageText}) => {
             value={formData.about} 
             onChange={handleChange} 
             placeholder="About" 
-            maxLength="5000"
+            className='text-box-about'
           />
 
-          <button type="submit">Save</button>
+          <button type="submit" className='button-blue'>Save</button>
         </form>
       </div>
     </Modal>

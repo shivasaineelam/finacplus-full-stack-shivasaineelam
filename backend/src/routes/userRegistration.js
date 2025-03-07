@@ -56,7 +56,6 @@ router.post('/login', loginValidationMiddleware, validateLogin, async (req, res)
     if (!user) {
       return ResponseFormatter.operationSuccess(res, "", 'User does not exist. Please register first.', 404);
     }
-    console.log(password);
 
     const isMatch = await bcrypt.compare(password.trim(), user.password);
     if (!isMatch) {
@@ -98,9 +97,7 @@ router.get('/users', authMiddleware, async (req, res) => {
 
 router.get('/user', authMiddleware, async (req, res) => {
   try {
-    console.log(req.user.id);
     const users = await User.findById(req.user.id);
-    console.log(users);
     return ResponseFormatter.operationSuccess(res, users, 'User fetched successfully', 200);
   } catch (error) {
     console.error('Error fetching users:', error);

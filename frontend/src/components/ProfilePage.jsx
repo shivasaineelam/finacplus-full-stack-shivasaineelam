@@ -27,7 +27,7 @@ const ProfilePage = () => {
   });
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [messageText, setMessageText] = useState(''); 
+  const [messageText, setMessageText] = useState('');
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -54,6 +54,11 @@ const ProfilePage = () => {
 
     fetchUserData();
   }, [navigate, isEditing]);
+
+  const formatDate = (date) => {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -170,8 +175,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="profile-container">
-      {/* Show messageText at the top */}
+    <div className="profile-page">
       {messageText && <div className="message-text">{messageText}</div>}
 
       <div className="profile-card">
@@ -223,25 +227,30 @@ const ProfilePage = () => {
                 validationFeedback={validationFeedback}
               />
 
-              <div className="edit-buttons">
+              <div className="profile-page-buttons ">
                 <button
+                className='button-red'
                   onClick={handleUpdateProfile}
                   disabled={isSaveButtonDisabled()}
                 >
                   Save Changes
                 </button>
-                <button onClick={() => setIsEditing(false)}>Cancel</button>
+                <button onClick={() => setIsEditing(false)} className='button-green'>Cancel</button>
               </div>
             </div>
           ) : (
             <>
               <p><strong>Email:</strong> {userInfo?.email}</p>
               <p><strong>Age:</strong> {userInfo?.age}</p>
+              <p><strong>Gender:</strong> {userInfo?.gender}</p>
               <p><strong>About:</strong> {userInfo?.about || 'No additional information provided.'}</p>
+              <p><strong>Date of Birth:</strong> {formatDate(userInfo?.dateofbirth)}</p>
+              <p><strong>Account Created:</strong> {formatDate(userInfo?.createdAt)}</p>
+              <p><strong>Last Updated:</strong> {formatDate(userInfo?.updatedAt)}</p>
               <div className="edit-buttons">
-                <button onClick={() => setIsEditing(true)}>Edit Profile</button>
-                <button onClick={handleLogout} className="logout-btn">Logout</button>
-                <button onClick={() => setShowDeleteConfirm(true)} className="delete-btn">Delete Account</button>
+                <button onClick={() => setIsEditing(true)} className='button-green'>Edit Profile</button>
+                <button onClick={handleLogout} className="button-lightred">Logout</button>
+                <button onClick={() => setShowDeleteConfirm(true)} className="button-red">Delete Account</button>
               </div>
             </>
           )}
@@ -249,12 +258,12 @@ const ProfilePage = () => {
       </div>
 
       {showDeleteConfirm && (
-        <div className="confirmation-modal-1">
-          <div className="modal-content-1">
-            <h3>Are you sure you want to delete your account?</h3>
-            <div className="modal-actions-1">
-              <button onClick={handleDeleteAccount} className="delete-confirm-1">Yes, Delete</button>
-              <button onClick={() => setShowDeleteConfirm(false)} className="cancel-1">Cancel</button>
+        <div className="delete-confirmation-div">
+          <div className="delete-confirmation-modal">
+            <h3 className="delete-modal-h1">Are you sure you want to delete your account?</h3>
+            <div className="delete-modal-div">
+              <button onClick={handleDeleteAccount} className="confirm-button cancel-confirm-button">Yes, Delete</button>
+              <button onClick={() => setShowDeleteConfirm(false)} className="button-green">Cancel</button>
             </div>
           </div>
         </div>

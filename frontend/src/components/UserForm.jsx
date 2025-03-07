@@ -109,8 +109,8 @@ const RegistrationForm = ({ toggleForm, isLogin, messageText, setmessageText }) 
         setmessageText("The password you entered is incorrect. Please try again.");
       }
       else if (error?.response?.status === 404) {
-        toggleForm();
         setmessageText("User not found. Please register.")
+        toggleForm();
       } 
       else {
         console.error("An error occurred during login", error);
@@ -134,13 +134,24 @@ const RegistrationForm = ({ toggleForm, isLogin, messageText, setmessageText }) 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(formData.name.length<2){
+  
+    if(formData.name.length < 2 && !isLogin) {
       setmessageText('Please enter a valid name (at least 2 characters).');
       return;
     }
+  
     const emailIsValid = validateEmail(formData.email);
+    if (!emailIsValid) {
+      setmessageText("Please enter a valid email address.");
+      return;
+    }
+  
+    if (formData.age !== "" && (isNaN(formData.age) || Number(formData.age) < 0|| Number(formData.age) > 100)) {
+      setmessageText('Please enter a valid age (between 0 and 100)');
+      return;
+    }
+  
     const passwordValidation = validatePassword(formData.password);
-    if(!emailIsValid){setmessageText("Please enter a valid email address.");return ;}
     if (emailIsValid && passwordValidation || isLogin) {
       try {
         if (isLogin) {
@@ -153,6 +164,7 @@ const RegistrationForm = ({ toggleForm, isLogin, messageText, setmessageText }) 
       }
     }
   };
+  
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);  
@@ -176,13 +188,12 @@ const RegistrationForm = ({ toggleForm, isLogin, messageText, setmessageText }) 
       symbolValid: false,
     });
     setPasswordVisible(false);
-    setmessageText('');
   }, [isLogin]);
 
   return (
     <div>
       <div>
-        <button onClick={() => {  toggleForm(); }} className="toggle-form">
+        <button onClick={() => { setmessageText(''); toggleForm(); }} className="toggle-form button-login">
           {isLogin ? "New here? Create an account" : "Already a member? Sign in"}
         </button>
       </div>
@@ -190,7 +201,7 @@ const RegistrationForm = ({ toggleForm, isLogin, messageText, setmessageText }) 
 
         {!isLogin && (
           <>
-            {messageText && <div>{messageText}</div>}
+              {messageText&& <div className='warning-text'>{messageText}</div>}
             <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
             <input 
               type="email" 
@@ -214,14 +225,14 @@ const RegistrationForm = ({ toggleForm, isLogin, messageText, setmessageText }) 
               ))}
             </select>
 
-            <textarea name="about" value={formData.about} onChange={handleChange} placeholder="About" ></textarea>
+            <textarea name="about" className='text-box-about' value={formData.about} onChange={handleChange} placeholder="About" ></textarea>
 
           </>
         )}
 
         {isLogin && (
           <>
-            {messageText && <div className='user-exist'>{messageText}</div>}
+            {messageText && <div className='warning-text'>{messageText}</div>}
             <input 
               type="email" 
               name="email" 
@@ -230,32 +241,35 @@ const RegistrationForm = ({ toggleForm, isLogin, messageText, setmessageText }) 
               placeholder="Email" 
               required 
             />
-            <input 
-              type={passwordVisible ? "text" : "password"}  
-              name="password" 
-              value={formData.password} 
-              onChange={handleChange} 
-              placeholder="Password" 
-              required 
-              minLength="10" 
-            />
-            <span 
-              className="eye-icon" 
-              onClick={() => togglePasswordVisibility()} 
-              style={{ cursor: 'pointer', color: 'black' }}
-            >
-              {passwordVisible ? (
-                <ClosedEyeIcon width="24" height="24"/>
-              ) : (
-                <OpenEyeIcon width="24" height="24" />
-              )}
-            </span>
+               <div className='password-box-1'>
+                <input 
+                  type={passwordVisible ? "text" : "password"}  
+                  name="password" 
+                  value={formData.password} 
+                  onChange={handleChange} 
+                  placeholder="Password" 
+                  required 
+                  minLength="10" 
+                />
+                <span 
+                  className="eye-icon" 
+                  onClick={()=>togglePasswordVisibility()} 
+                  style={{ cursor: 'pointer',color:'black' }}
+                >
+                {passwordVisible ? (
+                  <ClosedEyeIcon  width="24" height="24"/>
+                ) : (
+                  <OpenEyeIcon width="24" height="24" />
+                )}
+                </span>
+              </div>
+
           </>
         )}
-        <button className="toggle-form" type="submit">{isLogin ? 'Login' : 'Register'}</button>
+        <button className="toggle-form button-green" type="submit">{isLogin ? 'Login' : 'Register'}</button>
       </form>
     </div>
   );
 };
-
+ 
 export default RegistrationForm;

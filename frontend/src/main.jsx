@@ -5,6 +5,7 @@ import appStore from './utlils/appStore';
 import { BrowserRouter, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import './App.css';
+import './index.css'
 
 import ProfilePage from './components/ProfilePage';
 

@@ -28,12 +28,23 @@ const PasswordComponent = ({passwordVisible,handleChange,formData,togglePassword
               </div>
 
               <div className="password">
-                <span className={validationFeedback.lengthValid ? "valid" : "invalid"}>Password must be at least 10 characters.</span>
-                <span className={validationFeedback.lowercaseValid ? "valid" : "invalid"}>Password must include at least one lowercase letter.</span>
-                <span className={validationFeedback.uppercaseValid ? "valid" : "invalid"}>Password must include at least one uppercase letter.</span>
-                <span className={validationFeedback.numberValid ? "valid" : "invalid"}>Password must include at least one number.</span>
-                <span className={validationFeedback.symbolValid ? "valid" : "invalid"}>Password must include at least one symbol (!@#$%^&*).</span>
+                <span className={`password-element ${validationFeedback.lengthValid ? "password-valid" : "password-invalid"}`}>
+                  Password must be at least 10 characters.
+                </span>
+                <span className={`password-element ${validationFeedback.lowercaseValid ? "password-valid" : "password-invalid"}`}>
+                  Password must include at least one lowercase letter.
+                </span>
+                <span className={`password-element ${validationFeedback.uppercaseValid ? "password-valid" : "password-invalid"}`}>
+                  Password must include at least one uppercase letter.
+                </span>
+                <span className={`password-element ${validationFeedback.numberValid ? "password-valid" : "password-invalid"}`}>
+                  Password must include at least one number.
+                </span>
+                <span className={`password-element ${validationFeedback.symbolValid ? "password-valid" : "password-invalid"}`}>
+                  Password must include at least one symbol (!@#$%^&*).
+                </span>
               </div>
+
             </div>
   )
 }
