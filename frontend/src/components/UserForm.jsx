@@ -150,7 +150,7 @@ const RegistrationForm = ({ toggleForm, isLogin, messageText, setmessageText }) 
       setmessageText('Please enter a valid age (between 0 and 100)');
       return;
     }
-  
+    formData.age=Number(formData.age);
     const passwordValidation = validatePassword(formData.password);
     if (emailIsValid && passwordValidation || isLogin) {
       try {
