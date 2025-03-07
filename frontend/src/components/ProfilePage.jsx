@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import PasswordComponent from './PasswordComponent';
 import { deleteUserApi, getUserApi, logoutUserApi, updateUserApi } from '../helpers/api_helpers';
-import { validatePasswordfunction, validateEmail } from '../helpers/validationHelpers';
+import { validatePasswordfunction, validateEmail, calculateAgeFromYear } from '../helpers/validationHelpers';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -14,7 +14,8 @@ const ProfilePage = () => {
     email: '',
     age: '',
     about: '',
-    password: ''
+    password: '',
+    dateofbirth: ''
   });
 
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -45,7 +46,8 @@ const ProfilePage = () => {
           email: response?.data?.data?.email || '',
           age: response?.data?.data?.age || '',
           about: response?.data?.data?.about || '',
-          password: ''
+          password: '',
+          dateofbirth: response?.data?.data?.dateofbirth || ''
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -62,17 +64,27 @@ const ProfilePage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "age") {
+    if (name === 'age') {
       if (value !== "" && isNaN(value) || Number(value) < 0 || Number(value) > 100) {
-        setMessageText('Please enter a valid age');
+        setMessageText('Please enter a valid age (between 0 and 100)');
       } else {
-        setMessageText("");
+        setMessageText('');
       }
     }
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+
+    if (name === 'dateofbirth' && value) {
+      const age = calculateAgeFromYear(value);
+      setFormData({
+        ...formData,
+        [name]: value,
+        age: age
+      });
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -105,8 +117,13 @@ const ProfilePage = () => {
       setMessageText('Please enter a valid email');
       return;
     }
-    if(formData.name.length<2){
+    if (formData.name.length < 2) {
       setMessageText('Please enter a valid name');
+      return;
+    }
+    const value = formData.age;
+    if (value !== "" && isNaN(value) || Number(value) < 0 || Number(value) > 100) {
+      setMessageText('Please enter a valid age (between 0 and 100)');
       return;
     }
 
@@ -124,6 +141,7 @@ const ProfilePage = () => {
       if (formData.age !== userInfo.age) updatedFields.age = formData.age;
       if (formData.about !== userInfo.about) updatedFields.about = formData.about;
       if (formData.password !== '') updatedFields.password = formData.password;
+      if (formData.dateofbirth !== userInfo.dateofbirth) updatedFields.dateofbirth = formData.dateofbirth;
 
       if (Object.keys(updatedFields).length > 0) {
         await updateUserApi(updatedFields);
@@ -176,10 +194,9 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page">
-      {messageText && <div className="message-text">{messageText}</div>}
-
       <div className="profile-card">
         <h2 className="welcome-text">Welcome, {userInfo?.name || 'User'}</h2>
+        {messageText && <div className="warning-text">{messageText}</div>}
         <div className="user-info">
           {isEditing ? (
             <div className="edit-form">
@@ -211,6 +228,15 @@ const ProfilePage = () => {
                 />
               </label>
               <label>
+                <strong>Date of Birth:</strong>
+                <input
+                  type="date"
+                  name="dateofbirth"
+                  value={formData.dateofbirth}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
                 <strong>About:</strong>
                 <textarea
                   name="about"
@@ -227,15 +253,30 @@ const ProfilePage = () => {
                 validationFeedback={validationFeedback}
               />
 
-              <div className="profile-page-buttons ">
+              <div className="profile-page-buttons">
                 <button
-                className='button-red'
+                  className="button-red"
                   onClick={handleUpdateProfile}
                   disabled={isSaveButtonDisabled()}
                 >
                   Save Changes
                 </button>
-                <button onClick={() => setIsEditing(false)} className='button-green'>Cancel</button>
+                <button
+                  onClick={() => {
+                    setMessageText('');
+                    setValidationFeedback({
+                      lengthValid: false,
+                      lowercaseValid: false,
+                      uppercaseValid: false,
+                      numberValid: false,
+                      symbolValid: false
+                    });
+                    setIsEditing(false);
+                  }}
+                  className="button-green"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           ) : (
@@ -248,7 +289,7 @@ const ProfilePage = () => {
               <p><strong>Account Created:</strong> {formatDate(userInfo?.createdAt)}</p>
               <p><strong>Last Updated:</strong> {formatDate(userInfo?.updatedAt)}</p>
               <div className="edit-buttons">
-                <button onClick={() => setIsEditing(true)} className='button-green'>Edit Profile</button>
+                <button onClick={() => setIsEditing(true)} className="button-green">Edit Profile</button>
                 <button onClick={handleLogout} className="button-lightred">Logout</button>
                 <button onClick={() => setShowDeleteConfirm(true)} className="button-red">Delete Account</button>
               </div>
@@ -262,7 +303,7 @@ const ProfilePage = () => {
           <div className="delete-confirmation-modal">
             <h3 className="delete-modal-h1">Are you sure you want to delete your account?</h3>
             <div className="delete-modal-div">
-              <button onClick={handleDeleteAccount} className="confirm-button cancel-confirm-button">Yes, Delete</button>
+              <button onClick={handleDeleteAccount} className="button-red">Yes, Delete</button>
               <button onClick={() => setShowDeleteConfirm(false)} className="button-green">Cancel</button>
             </div>
           </div>
