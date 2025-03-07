@@ -87,29 +87,29 @@ The app will be available at `http://localhost:5173`.
 ### User Registration Form
 This is what the user registration page looks like, including the fields for name, email, age, and password.
 
-![User Registration Form](./homepage.png)
+![User Registration Form](./assests/homepage.png)
 
 
 
 ### Profile Completion Modal
 After logging in via Google, users are prompted to complete their profile with additional information.
 
-![Profile Completion Modal](./googlemodal.png)
+![Profile Completion Modal](./assests/googlemodal.png)
 
 ### User Login Page
 This is the login page, allowing users to log in with their email and password.
 
-![User Login Page](./loginpage.png)
+![User Login Page](./assests/loginpage.png)
 
 ### User Profile Page
 Once logged in, users can view and edit their profile information.
 
-![User Profile Page](./editpage.png)
+![User Profile Page](./assests/editpage.png)
 
 ### Profile Information Overview
 Here's an overview of the profile page showing user's details and options for editing or deleting the account.
 
-![Profile Information Overview](./profile.png)
+![Profile Information Overview](./assests/profile.png)
 
 ---
 
