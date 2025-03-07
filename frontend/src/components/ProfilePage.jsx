@@ -126,6 +126,7 @@ const ProfilePage = () => {
       setMessageText('Please enter a valid age (between 0 and 100)');
       return;
     }
+    formData.age=Number(formData.age);
 
     const passwordIsValid = validatePasswordfunction(formData.password).passwordValid;
     if (formData.password !== '' && !passwordIsValid) {
