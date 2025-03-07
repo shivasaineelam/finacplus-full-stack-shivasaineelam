@@ -55,6 +55,17 @@ npm start
 The server will start running at `http://localhost:5000`.
 
 ---
+### 🚀 Run with Docker
+
+If you have Docker installed, you can run the application using Docker Compose. Simply use the following command to build and run the containers:
+
+```bash
+docker-compose up --build
+```
+
+---
+
+
 
 ## 🔑 Features
 
