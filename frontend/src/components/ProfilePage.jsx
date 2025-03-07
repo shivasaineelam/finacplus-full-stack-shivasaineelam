@@ -181,13 +181,6 @@ const ProfilePage = () => {
     }
   };
 
-  const isSaveButtonDisabled = () => {
-    const isPasswordEdited = formData.password !== '';
-    if (isPasswordEdited) {
-      return !(validationFeedback.lengthValid && validationFeedback.lowercaseValid && validationFeedback.uppercaseValid && validationFeedback.numberValid && validationFeedback.symbolValid);
-    }
-    return false;
-  };
 
   if (!userInfo) {
     return <div className="loading">Loading...</div>;
@@ -258,7 +251,6 @@ const ProfilePage = () => {
                 <button
                   className="button-red"
                   onClick={handleUpdateProfile}
-                  disabled={isSaveButtonDisabled()}
                 >
                   Save Changes
                 </button>
