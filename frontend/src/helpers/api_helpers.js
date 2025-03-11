@@ -4,6 +4,7 @@ export const loginUserApi = async (formData) => {
   try {
     const url = `${import.meta.env.VITE_USER_REGISTRATION_BACKEND}/api/v1/login`;
     const response = await axios.post(url, formData, { withCredentials: true });
+    localStorage.setItem('islogged',true)
     return response;
   } catch (error) {
     console.log(error);
@@ -15,6 +16,7 @@ export const registerUserApi = async (formData) => {
   try {
     const url = `${import.meta.env.VITE_USER_REGISTRATION_BACKEND}/api/v1/register`;
     const response = await axios.post(url, formData, { withCredentials: true });
+    localStorage.setItem('islogged',true)
     return response;
   } catch (error) {
     console.log(error);
@@ -26,6 +28,8 @@ export const logoutUserApi = async () => {
   try {
     const url = `${import.meta.env.VITE_USER_REGISTRATION_BACKEND}/api/v1/logout`;
     await axios.post(url, {}, { withCredentials: true });
+    localStorage.removeItem('islogged')
+
   } catch (error) {
     return error;
   }
@@ -35,6 +39,8 @@ export const deleteUserApi = async () => {
   try {
     const url = `${import.meta.env.VITE_USER_REGISTRATION_BACKEND}/api/v1/delete`;
     await axios.delete(url, { withCredentials: true });
+    localStorage.removeItem('islogged')
+
   } catch (error) {
     return error;
   }

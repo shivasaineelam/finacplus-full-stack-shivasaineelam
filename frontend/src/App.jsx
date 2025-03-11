@@ -15,7 +15,7 @@ function App() {
   const[messageText,setmessageText]=useState("");
   
   useEffect(() => {
-    const token = Cookies.get('token');
+    const token = localStorage.getItem('islogged')
     if (token) {
       navigate('/profile');
     }

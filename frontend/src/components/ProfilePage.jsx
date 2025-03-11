@@ -31,7 +31,7 @@ const ProfilePage = () => {
   const [messageText, setMessageText] = useState('');
 
   useEffect(() => {
-    const token = Cookies.get('token');
+    const token = localStorage.getItem('islogged')
     if (!token) {
       navigate('/');
       return;
@@ -164,7 +164,6 @@ const ProfilePage = () => {
   const handleLogout = async () => {
     try {
       await logoutUserApi();
-      Cookies.remove('token');
       navigate('/');
     } catch (error) {
       console.error('Error logging out:', error);
@@ -174,7 +173,6 @@ const ProfilePage = () => {
   const handleDeleteAccount = async () => {
     try {
       await deleteUserApi();
-      Cookies.remove('token');
       navigate('/');
     } catch (error) {
       console.error('Error deleting account:', error);
