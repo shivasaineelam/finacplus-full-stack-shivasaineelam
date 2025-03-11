@@ -9,16 +9,26 @@ const connectDatabase = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-console.log(process.env.FRONTEND_URL)
+
 connectDatabase();
+
+const allowedOrigins = [
+  'https://finacplus-full-stack-shivasaineela-shiva-sais-projects-cc9de988.vercel.app',
+  'https://finacplus-full-stack-shivasaineelam.vercel.app'
+];
+
 const corsOptions = {
-  origin: '*', 
-  credentials: true,
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, 
 };
 
-app.use(cors(corsOptions));
- 
-
+app.use(cors(corsOptions));  
 app.use(express.json());
 app.use(cookieParser());
 
