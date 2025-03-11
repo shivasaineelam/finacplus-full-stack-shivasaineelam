@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import {  useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addGenders } from "../utils/genderSlics";
+import { addGenders } from "../utlils/genderSlics.js";
+
 
 const useGenderDetails = () => {
   const dispatch = useDispatch();
