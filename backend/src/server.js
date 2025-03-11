@@ -12,12 +12,14 @@ const PORT = process.env.PORT || 5000;
 console.log(process.env.FRONTEND_URL)
 connectDatabase();
 const corsOptions = {
-  origin: 'https://finacplus-full-stack-shivasaineelam.vercel.app/', 
-  credentials: true,              
+  origin: 'https://finacplus-full-stack-shivasaineelam.vercel.app',
+  credentials: true,  
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(cors(corsOptions));
-// app.options('*', cors(corsOptions));  
+app.options('*', cors(corsOptions)); 
 
 app.use(express.json());
 app.use(cookieParser());
