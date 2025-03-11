@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 console.log(process.env.FRONTEND_URL)
 connectDatabase();
 const corsOptions = {
-  origin: 'http://localhost:5173', 
+  origin: 'https://finacplus-full-stack-shivasaineelam.vercel.app/', 
   credentials: true,              
 };
 
