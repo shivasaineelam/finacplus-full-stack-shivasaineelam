@@ -35,7 +35,7 @@ router.post('/register', validationMiddleware, validate, async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: false,
-      secure: false,  
+      secure: true,  
       sameSite: 'None',
       maxAge: 3600000 * 2,
     });
@@ -66,7 +66,7 @@ router.post('/login', loginValidationMiddleware, validateLogin, async (req, res)
 
     res.cookie('token', token, {
       httpOnly: false,
-      secure: false,
+      secure: true,
       sameSite: 'None',
       maxAge: 3600000 * 2,
     });
@@ -136,7 +136,7 @@ router.delete('/delete', authMiddleware, async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  res.clearCookie('token', { httpOnly: false, secure: false });
+  res.clearCookie('token', { httpOnly: false, secure: true });
   return ResponseFormatter.operationSuccess(res, "", 'User logged out successfully', 200);
 });
 
