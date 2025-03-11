@@ -36,7 +36,7 @@ router.post('/register', validationMiddleware, validate, async (req, res) => {
     res.cookie('token', token, {
       httpOnly: false,
       secure: false,  
-      sameSite: 'Strict',
+      sameSite: 'None',
       maxAge: 3600000 * 2,
     });
 
